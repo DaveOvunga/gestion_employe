@@ -8,11 +8,21 @@ use App\Http\Controllers\Web\DepartementController;
 use App\Http\Controllers\Web\EmployeController; 
 use App\Http\Controllers\Web\AbsenceController;
 use App\Http\Controllers\Web\CongeController;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;    
 
 
 Route::get('/', function () {
-    return view('/login');
+    return redirect()->route('login');
 });
+
+Route::post('/logout', function (Request $request) {
+    Auth::logout();
+    $request->session()->invalidate();
+    $request->session()->regenerateToken();
+    
+    return redirect()->route('login');
+})->name('logout');
 
 Route::get('/dashboard', function () {
     return view('dashboard');
