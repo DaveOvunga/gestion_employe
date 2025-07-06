@@ -6,6 +6,9 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Spatie\Permission\Traits\HasRoles;
+use App\Models\Employe;
+use Spatie\Permission\Models\Role;  
 
 class User extends Authenticatable
 {
@@ -17,6 +20,8 @@ class User extends Authenticatable
      *
      * @var list<string>
      */
+
+     use HasRoles;
     protected $fillable = [
         'name',
         'email',
@@ -45,4 +50,17 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+
+    public function employe()
+    {
+        return $this->hasOne(Employe::class);
+    }
+
+    // public function roles()
+    // {
+    //     return $this->belongsToMany(Role::class);
+    // }
+
+
 }
