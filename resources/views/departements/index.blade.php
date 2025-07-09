@@ -10,11 +10,13 @@
             <th>Description</th>
         </tr>
     </thead>
-    <tbody>
+    <tbody>        
+            @foreach($departements as $departement)
         <tr>
             <td>{{ $departement->name }}</td>
             <td>{{ $departement->description }}</td>
-        </tr>
+        </tr>    
+            @endforeach    
     </tbody>
 </table>
 @endsection

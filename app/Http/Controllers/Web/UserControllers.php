@@ -37,13 +37,14 @@ class UserControllers extends Controller
          if (in_array($request->role, ['Employe', 'Manager'])) {
             Employe::create([
                 'user_id'        => $user->id,
-                'departement_id' => null, // ou $request->departement_id si tu veux le choisir maintenant
-                'date_embauche'  => now()->toDateString(),
-                'poste'          => $user->role === 'Manager' ? 'Manager' : 'Employé',
-                'salaire'        => 0.00, // par défaut, modifiable plus tard
-                'manager_id'     => $user->role === 'Manager' ? null : $this->getDefaultManagerId(),
+                'departement_id' => $request->departement_id,
+                'date_embauche'  => $request->date_embauche ?? now()->toDateString(),
+                'poste'          => $request->poste ?? ($request->role === 'Manager' ? 'Manager' : 'Employé'),
+                'salaire'        => $request->salaire ?? 0.00,
+                'manager_id'     => $request->role === 'Manager' ? null : $this->getDefaultManagerId(),
             ]);
         }
+
 
         // Attribution du rôle
         $user->assignRole($request->role);
