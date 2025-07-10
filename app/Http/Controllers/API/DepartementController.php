@@ -1,52 +1,27 @@
 <?php
 
-namespace App\Http\Controllers\API;
-
-use App\Http\Controllers\Controller;
+use App\Services\DepartementService;
 use Illuminate\Http\Request;
-use App\Models\Departement; // 
+use App\Http\Controllers\Controller;
 
 class DepartementController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
+    public function index(DepartementService $service)
     {
-        //
+        return response()->json($service->liste());
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
+    public function store(Request $request, DepartementService $service)
     {
         $request->validate(['nom' => 'required|string']);
-        return Departement::create($request->only('nom'));
+        $departement = $service->creer($request->all());
+
+        return response()->json($departement, 201);
     }
 
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
+    public function destroy(string $id, DepartementService $service)
     {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
+        $service->supprimer($id);
+        return response()->json(['message' => 'Supprimé avec succès']);
     }
 }

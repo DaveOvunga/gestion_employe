@@ -1,89 +1,27 @@
 <?php
 
-namespace App\Http\Controllers\API;
-
-use App\Http\Controllers\Controller;
+use App\Services\EmployeService;
+use App\Http\Controllers\Controller;    
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use App\Models\Employe; // Assuming you have an Employe model
 
-class EmployeController extends Controller
+
+class EmployeWebController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
+    public function update(Request $request, EmployeService $service)
     {
-        //
+        $service->updateProfil(auth::user(), $request->only('name', 'email'));
+        return redirect()->back()->with('success', 'Profil mis à jour');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
+    public function storeConge(Request $request, EmployeService $service)
     {
         $request->validate([
-            'user_id' => 'required|exists:users,id',
-            'poste' => 'required|string',
-            'date_embauche' => 'required|date',
-            'departement_id' => 'required|exists:departements,id',
+            'date_debut' => 'required|date',
+            'date_fin'   => 'required|date|after_or_equal:date_debut',
         ]);
 
-        return Employe::create($request->all());
-    }
-
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, $id)
-    {
-        $employe = Employe::findOrFail($id);
-
-        $request->validate([
-            'poste' => 'sometimes|string',
-            'date_embauche' => 'sometimes|date',
-            'departement_id' => 'sometimes|exists:departements,id',
-        ]);
-
-        $employe->update($request->all());
-
-        return response()->json($employe);
-    }
-
-    
-    public function equipe()
-    {
-        /** @var \App\Models\User $user */
-        $user = auth::user();
-
-        if (! $user->hasRole('Manager')) {
-            return response()->json(['message' => 'Non autorisé'], 403);
-        }
-
-        $equipe = Employe::where('manager_id', $user->id)
-                    ->with('user', 'departement')
-                    ->get();
-
-        return response()->json($equipe);
-
-    }
-
-
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
+        $service->soumettreConge(auth::user(), $request->all());
+        return redirect()->back()->with('success', 'Demande envoyée');
     }
 }

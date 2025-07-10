@@ -1,19 +1,13 @@
 <?php
-
-namespace App\Http\Controllers\Web;
-
-use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
-use App\Models\Departement;
-use App\Models\Employe;
-use Illuminate\Support\Facades\Auth;
+use App\Services\DepartementService;
+use App\Http\Controllers\Controller;    
 
 class DepartementController extends Controller
-{    
-    public function index()
+{
+    public function index(DepartementService $service)
     {
-        $departements = Departement::all();
+        $departements = $service->liste();
         return view('departements.index', compact('departements'));
-    }   
-
+    }
 }
+

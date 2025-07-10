@@ -1,26 +1,27 @@
 <?php
 
-namespace App\Http\Controllers\Web;
+use App\Services\EmployeService;
+use App\Http\Controllers\Controller;    
+use Illuminate\Http\Request;   
+use Illuminate\Support\Facades\Auth; // Import Auth facade for authentication 
 
-use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use App\Models\Employe;
-class EmployeController extends Controller
+class EmployeWebController extends Controller
 {
-    public function index()
+    public function update(Request $request, EmployeService $service)
     {
-        $employes = Employe::with('user', 'departement')->get();
-        return view('employes.index', compact('employes'));
+        $service->updateProfil(auth::user(), $request->only('name', 'email'));
+        return redirect()->back()->with('success', 'Profil mis à jour');
     }
 
-     public function monDepartement()
+    public function storeConge(Request $request, EmployeService $service)
     {
-        $employe = Auth::user()->employe;
-        $departement = $employe->departement;
-        $equipe = Employe::where('departement_id', $departement->id)->with('user')->get();
+        $request->validate([
+            'date_debut' => 'required|date',
+            'date_fin'   => 'required|date|after_or_equal:date_debut',
+        ]);
 
-        return view('departements.index', compact('departement', 'equipe'));
+        $service->soumettreConge(auth::user(), $request->all());
+        return redirect()->back()->with('success', 'Demande envoyée');
     }
-
 }
+
