@@ -1,29 +1,18 @@
 <?php
-
-namespace App\Http\Controllers\Web;
-
-use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
-use App\Models\Absence;
-use Illuminate\Support\Facades\Auth;
+use App\Services\AbsenceService;
 
 class AbsenceController extends Controller
 {
-    public function index()
+    public function index(AbsenceService $service)
     {
-        $absences = Absence::with('employe.user')->get();
+        $absences = $service->tout();
         return view('absences.index', compact('absences'));
     }
 
-    public function historique()
+    public function historique(AbsenceService $service)
     {
-        $employe = Auth::user()->employe;
-        $absences = Absence::where('employe_id', $employe->id)->orderBy('date_absence', 'desc')->get();
+        $user = Auth::user();
+        $absences = $service->historique($user);
         return view('absences.index', compact('absences'));
     }
-
-}
-
-
-
-
+}?>
