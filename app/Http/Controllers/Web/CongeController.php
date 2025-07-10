@@ -20,11 +20,11 @@ class CongeController extends Controller
     public function updateStatut(Request $request, $id)
     {
         $request->validate([
-            'statut' => 'required|in:approuve,rejete',
+            'status' => 'required|in:approuve,rejete',
         ]);
 
         $conge = Conge::findOrFail($id);
-        $conge->statut = $request->statut;
+        $conge->status = $request->status;
         $conge->save();
 
         return redirect()->back()->with('success', 'Statut mis à jour');
@@ -53,7 +53,7 @@ class CongeController extends Controller
             'status' => 'en attente',
         ]);
 
-        return redirect()->back()->with('success', '✅ Demande de congé envoyée avec succès.');
+        return redirect()->back()->with('success', ' Demande de congé envoyée avec succès.');
     }
 
     public function historique()
@@ -61,7 +61,7 @@ class CongeController extends Controller
         $employe = Auth::user()->employe;
         $conges = Conge::where('employe_id', $employe->id)->orderByDesc('created_at')->get();
 
-        return view('employe.conges', compact('conges'));
+        return view('employes.conges', compact('conges'));
     }
 
     public function statutRh()
@@ -75,7 +75,5 @@ class CongeController extends Controller
 
         return view('employes.statut_rh', compact('total', 'enAttente', 'approuves', 'rejetes'));
     }
-
-
 
 }

@@ -71,7 +71,7 @@ Route::middleware(['auth'])->group(function () {
 
 Route::middleware(['auth'])->group(function () {
     Route::get('/employe/absences', [AbsenceController::class, 'historique'])->name('employe.absences');
-    Route::get('/employe/conges', [CongeController::class, 'historique'])->name('employe.conges');
+    Route::get('/employe/conges', [CongeController::class, 'historique'])->name('employe.index');
     Route::get('/employe/departement', [EmployeController::class, 'monDepartement'])->name('employe.departement');
     Route::get('/employe/statut-rh', [CongeController::class, 'statutRh'])->name('employe.statut_rh');        
 });

@@ -39,7 +39,7 @@ class UserControllers extends Controller
                 'user_id'        => $user->id,
                 'departement_id' => $request->departement_id,
                 'date_embauche'  => $request->date_embauche ?? now()->toDateString(),
-                'poste'          => $request->poste ?? ($request->role === 'Manager' ? 'Manager' : 'Employé'),
+                'poste'          => $request->poste ?? $request->role,
                 'salaire'        => $request->salaire ?? 0.00,
                 'manager_id'     => $request->role === 'Manager' ? null : $this->getDefaultManagerId(),
             ]);
